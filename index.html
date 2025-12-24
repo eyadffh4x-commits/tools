@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الانضمام لفريق EY</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body {
+            background-color: #ffffff;
+            background-image: radial-gradient(#e6efff 1px, transparent 1px);
+            background-size: 20px 20px;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; color: #333;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95); width: 100%; max-width: 550px; padding: 40px;
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); border: 1px solid #eee;
+            animation: slideUp 1s ease-out;
+        }
+        h1 { color: #1a1a1a; font-weight: 900; font-size: 2.5rem; margin-bottom: 10px; text-align: center; }
+        h1 span { color: #2563eb; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1rem; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; color: #444; }
+        input, textarea {
+            width: 100%; padding: 15px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem;
+            transition: all 0.3s ease; background-color: #fcfcfc;
+        }
+        input:focus, textarea:focus {
+            outline: none; border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); transform: translateY(-2px);
+        }
+        button {
+            width: 100%; padding: 18px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white; border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); margin-top: 10px;
+        }
+        button:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.5); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>انضم لفريق <span>EY</span></h1>
+        <p class="subtitle">حيث تلتقي المهارة بالإبداع.</p>
+
+        <form id="telegramForm">
+            <div class="form-group">
+                <label>الاسم الكامل</label>
+                <input type="text" id="name" placeholder="مثال: أحمد محمد" required>
+            </div>
+
+            <div class="form-group">
+                <label>اشرح لنا مهاراتك بإبداع</label>
+                <textarea rows="4" id="skills" placeholder="اكتب مهاراتك هنا بالتفصيل.." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>البريد الإلكتروني (Gmail)</label>
+                <input type="email" id="email" placeholder="name@gmail.com" required>
+            </div>
+
+            <button type="submit" id="submitBtn">إرسال طلب الانضمام 🚀</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('telegramForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // ==========================================
+            // التوكن تم وضعه بنجاح
+            const botToken = "8456019953:AAFA62E9QWaaeWtsIpn_PzaHyQ5jd7S5beE"; 
+            
+            // ⚠️ هام جداً: امسح الجملة العربي واكتب رقمك هنا
+            const chatId = "حط_الـ_ID_بتاعك_هنا"; 
+            // ==========================================
+
+            const name = document.getElementById('name').value;
+            const skills = document.getElementById('skills').value;
+            const email = document.getElementById('email').value;
+
+            const message = `
+🚀 *طلب انضمام جديد لفريق EY*
+
+👤 *الاسم:* ${name}
+📧 *الإيميل:* ${email}
+
+🛠 *المهارات:*
+${skills}
+            `;
+
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "جاري الإرسال...";
+            btn.disabled = true;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: "Markdown"
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("تم إرسال طلبك بنجاح! راجع تليجرام.");
+                    document.getElementById('telegramForm').reset();
+                } else {
+                    alert("حدث خطأ! تأكد أنك وضعت الـ Chat ID بشكل صحيح.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("حدث خطأ في الاتصال.");
+            })
+            .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
